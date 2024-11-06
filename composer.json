@@ -1,0 +1,20 @@
+{
+    "name": "keiliel/php-exception",
+    "description": "Um sistema de construção de exceções php.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "PhpException\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Keiliel Oliveira",
+            "email": "keilieloliveira.2004@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpunit/phpunit": "^11.4"
+    }
+}
