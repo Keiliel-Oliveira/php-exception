@@ -1,0 +1,28 @@
+{
+    "name": "keiliel-oliveira/php-exception",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "KeilielOliveira\\PhpException\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Keiliel-Oliveira",
+            "email": "keilieloliveira.2004@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpstan/phpstan": "2.1.x-dev",
+        "phpunit/phpunit": "^12.4@dev",
+        "friendsofphp/php-cs-fixer": "dev-master"
+    },
+    "scripts": {
+        "cs-fix": "./vendor/bin/php-cs-fixer fix",
+        "phpstan": "./vendor/bin/phpstan analyse",
+        "tests": "./vendor/bin/phpunit --colors=always",
+        "test": "./vendor/bin/phpunit --colors=always testsuite"
+    }
+}
