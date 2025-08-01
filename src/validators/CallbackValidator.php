@@ -28,7 +28,7 @@ class CallbackValidator {
 
             $param = $callback->getParameters();
             $param = array_shift( $param );
-            $this->isNull($param);
+            $this->isNull( $param );
 
             $this->hasType( $param );
 

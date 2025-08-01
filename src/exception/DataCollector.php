@@ -8,7 +8,7 @@ use KeilielOliveira\PhpException\Context;
 
 /**
  * Coleta dados extras no backtrace para as exceções.
- * 
+ *
  * @phpstan-type Backtrace array{
  *      file?: string,
  *      line?: int,
@@ -18,7 +18,6 @@ use KeilielOliveira\PhpException\Context;
  *      object?: object,
  *      function?: string
  * }
- * 
  * @phpstan-type AdditionalData array{
  *      file: string|false,
  *      line: int|false,
@@ -50,8 +49,8 @@ class DataCollector {
             unset( $backtrace[$key] );
         }
 
-        if(empty($backtrace)) {
-            throw new \Exception('Não foi possível recuperar o backtrace.');
+        if ( empty( $backtrace ) ) {
+            throw new \Exception( 'Não foi possível recuperar o backtrace.' );
         }
 
         return array_shift( $backtrace );

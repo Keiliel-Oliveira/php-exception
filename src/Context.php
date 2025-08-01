@@ -48,8 +48,6 @@ class Context {
      * Deleta as chaves e seus valores dentro do contexto atual.
      *
      * Caso uma das chaves não exista, uma exceção será lançada.
-     *
-     * @param string $keys
      */
     public function delete( string ...$keys ): void {
         foreach ( $keys as $i => $key ) {
@@ -73,7 +71,7 @@ class Context {
 
         if ( null !== $callback ) {
             $context = $callback( $this->context );
-            $this->context = is_array($context) ? $context : [$context];
+            $this->context = is_array( $context ) ? $context : [$context];
 
             return;
         }

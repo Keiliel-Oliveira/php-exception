@@ -4,5 +4,8 @@
         <testsuite name="php-exception">
             <directory>tests/php-exception/</directory>
         </testsuite>
+        <testsuite name="validators">
+            <directory>tests/validators/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
