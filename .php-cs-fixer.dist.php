@@ -8,7 +8,7 @@ $finder = new Finder()->in(__DIR__);
 $customRules = [
     'braces_position' => [
         'classes_opening_brace' => 'same_line',
-        'functions_opening_braces' => 'same_line'
+        'functions_opening_brace' => 'same_line'
     ],
     'class_attributes_separation' => true,
     'ordered_class_elements' => true,
@@ -31,6 +31,7 @@ return new Config()
 ->setRules([
     "@Symfony" => true,
     "@PSR12" => true,
-    "@PhpCsFixer" => true
+    "@PhpCsFixer" => true,
+    ...$customRules
 ])
 ->setFinder($finder);
