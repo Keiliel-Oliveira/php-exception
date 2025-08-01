@@ -13,37 +13,47 @@ use ReflectionNamedType;
  * @see\KeilielOliveira\PhpException\Context
  */
 class CallbackValidator {
-    public function __construct( ?callable $callback ) {
+    private string $returnType;
+
+    private string $paramType;
+
+    public function __construct( ?callable $callback, string $returnType = 'mixed', string $paramType = 'mixed' ) {
         if ( is_callable( $callback ) ) {
-            $callback = \Closure::fromCallable( $callback );
-            $callback = new \ReflectionFunction( $callback );
-
-            $this->hasReturnType( $callback );
-            $returnType = $callback->getReturnType();
-            $this->isNull( $returnType );
-            $this->hasSingleReturnType( $returnType );
-            $this->returnMixed( $returnType );
-
-            $this->hasParam( $callback );
-
-            $param = $callback->getParameters();
-            $param = array_shift( $param );
-            $this->isNull( $param );
-
-            $this->hasType( $param );
-
-            $paramType = $param->getType();
-            $paramName = $param->getName();
-            $this->isNull( $paramType );
-
-            $this->hasSingleType( $paramName, $paramType );
-            $this->hasMixedType( $paramName, $paramType );
+            $this->returnType = $returnType;
+            $this->paramType = $paramType;
+            $this->validate( $callback );
         }
+    }
+
+    private function validate( callable $callback ): void {
+        $callback = \Closure::fromCallable( $callback );
+        $callback = new \ReflectionFunction( $callback );
+
+        $this->hasReturnType( $callback );
+        $returnType = $callback->getReturnType();
+        $this->isNull( $returnType );
+        $this->hasSingleReturnType( $returnType );
+        $this->returnExpectedType( $returnType );
+
+        $this->hasParam( $callback );
+
+        $param = $callback->getParameters();
+        $param = array_shift( $param );
+        $this->isNull( $param );
+
+        $this->hasType( $param );
+
+        $paramType = $param->getType();
+        $paramName = $param->getName();
+        $this->isNull( $paramType );
+
+        $this->hasSingleType( $paramName, $paramType );
+        $this->hasExpectedType( $paramName, $paramType );
     }
 
     private function hasReturnType( \ReflectionFunction $callback ): void {
         if ( !$callback->hasReturnType() ) {
-            $prepare = new ExceptionPrepare( 'função sem tipo de retorno', 'A função de callback deve retornar "mixed".' );
+            $prepare = new ExceptionPrepare( 'função sem tipo de retorno', sprintf( 'A função de callback deve retornar "%s".', $this->returnType ) );
 
             throw new \Exception( $prepare->getMessage() );
         }
@@ -56,15 +66,15 @@ class CallbackValidator {
      */
     private function hasSingleReturnType( \ReflectionType $returnType ): void {
         if ( !$returnType instanceof \ReflectionNamedType ) {
-            $prepare = new ExceptionPrepare( 'tipo de retorno invalido', 'A função de callback deve retornar "mixed", mas está retornando múltiplos tipos.' );
+            $prepare = new ExceptionPrepare( 'tipo de retorno invalido', sprintf( 'A função de callback deve retornar "%s", mas está retornando múltiplos tipos.', $this->returnType ) );
 
             throw new \Exception( $prepare->getMessage() );
         }
     }
 
-    private function returnMixed( \ReflectionNamedType $returnType ): void {
-        if ( 'mixed' != $returnType->getName() ) {
-            $prepare = new ExceptionPrepare( 'função sem tipo de retorno', sprintf( 'A função de callback deve retornar "mixed" mas está retornando "%s".', $returnType->getName() ) );
+    private function returnExpectedType( \ReflectionNamedType $returnType ): void {
+        if ( $this->returnType != $returnType->getName() ) {
+            $prepare = new ExceptionPrepare( 'função sem tipo de retorno', sprintf( 'A função de callback deve retornar "%s" mas está retornando "%s".', $this->returnType, $returnType->getName() ) );
 
             throw new \Exception( $prepare->getMessage() );
         }
@@ -80,7 +90,7 @@ class CallbackValidator {
 
     private function hasType( \ReflectionParameter $param ): void {
         if ( !$param->hasType() ) {
-            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "mixed", mas "%s" não possui um tipo definido.', $param->getName() ) );
+            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "%s", mas "%s" não possui um tipo definido.', $this->paramType, $param->getName() ) );
 
             throw new \Exception( $prepare->getMessage() );
         }
@@ -93,15 +103,15 @@ class CallbackValidator {
      */
     private function hasSingleType( string $paramName, \ReflectionType $paramType ): void {
         if ( !$paramType instanceof \ReflectionNamedType ) {
-            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "mixed", mas "%s" possui múltiplos tipos.', $paramName ) );
+            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "%s", mas "%s" possui múltiplos tipos.', $this->paramType, $paramName ) );
 
             throw new \Exception( $prepare->getMessage() );
         }
     }
 
-    private function hasMixedType( string $paramName, \ReflectionNamedType $paramType ): void {
-        if ( 'mixed' !== $paramType->getName() ) {
-            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "mixed", mas "%s" é do tipo "%s".', $paramName, $paramType->getName() ) );
+    private function hasExpectedType( string $paramName, \ReflectionNamedType $paramType ): void {
+        if ( $this->paramType !== $paramType->getName() ) {
+            $prepare = new ExceptionPrepare( 'parâmetro com tipo invalido', sprintf( 'A função de callback espera receber um parâmetro do tipo "%s", mas "%s" é do tipo "%s".', $this->paramType, $paramName, $paramType->getName() ) );
 
             throw new \Exception( $prepare->getMessage() );
         }

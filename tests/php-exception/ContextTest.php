@@ -16,12 +16,12 @@ final class ContextTest extends TestCase {
         $this->context = new Context();
     }
 
-    public function testAddContextAndGetContextIsAddingAndReturningContext(): void {
+    public function testSetAndGetIsAddingAndReturningContext(): void {
         $this->context->set( 'key', true );
         $this->assertTrue( $this->context->get( 'key' ) );
     }
 
-    public function testGetContextWithCallbackIsReturning(): void {
+    public function testGetWithCallbackIsReturning(): void {
         $this->context->set( 'key', [1, 2, 3, 4] );
         $expected = [2, 4];
         $returned = $this->context->get( 'key', function ( mixed $context ): mixed {
@@ -33,7 +33,7 @@ final class ContextTest extends TestCase {
         $this->assertEquals( $expected, $returned );
     }
 
-    public function testGetAllContextWithCallbackIsReturning(): void {
+    public function testGetAllWithCallbackIsReturning(): void {
         $this->context->set( 'A', 'string' );
         $this->context->set( 'B', 10 );
         $this->context->set( 'C', true );
@@ -48,13 +48,13 @@ final class ContextTest extends TestCase {
         $this->assertEquals( $expected, $returned );
     }
 
-    public function testHasContextIsValidating(): void {
+    public function testHasIsValidating(): void {
         $this->context->set( 'key', 'value' );
 
         $this->assertTrue( $this->context->has( 'key' ) );
     }
 
-    public function testForceSetContextIsAutomaticallyReplacingContext(): void {
+    public function testForceSetIsAutomaticallyReplacingContext(): void {
         $this->context->set( 'key', 'value' );
 
         $expected = 'new value';
@@ -64,7 +64,7 @@ final class ContextTest extends TestCase {
         $this->assertEquals( $expected, $returned );
     }
 
-    public function testRemoveContextIsRemovingContext(): void {
+    public function testRemoveIsRemovingContext(): void {
         $this->context->set( 'A', 'string' );
         $this->context->set( 'B', 10 );
         $this->context->set( 'C', true );
@@ -76,7 +76,7 @@ final class ContextTest extends TestCase {
         $this->assertEquals( $expected, $returned );
     }
 
-    public function testClearContextWithCallbackIsCleaningContext(): void {
+    public function testClearWithCallbackIsCleaningContext(): void {
         $this->context->set( 'A', 'string' );
         $this->context->set( 'B', 10 );
         $this->context->set( 'C', true );
@@ -90,5 +90,25 @@ final class ContextTest extends TestCase {
         $returned = $this->context->getAll();
 
         $this->assertEquals( $expected, $returned );
+    }
+
+    public function testIfHasIsAuthorizing(): void {
+        $this->assertNull( $this->context->ifHas( 'B' )->get( 'B' ) );
+    }
+
+    public function testIfNotHasIsAuthorizing(): void {
+        $this->context->set( 'A', true );
+
+        $this->assertNull( $this->context->ifNotHas( 'A' )->get( 'A' ) );
+    }
+
+    public function testWhenIsAuthorizing(): void {
+        $this->context->set( 'A', 10 );
+
+        $this->assertNull(
+            $this->context->when( function ( Context $c ): bool {
+                return $c->get( 'A' ) < 5;
+            } )->get( 'A' )
+        );
     }
 }

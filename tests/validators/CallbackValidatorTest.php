@@ -34,7 +34,7 @@ final class CallbackValidatorTest extends TestCase {
             function testOne(): int|string {
                 return '';
             };
-            $this->context->get( 'A', 'test_one' );
+            $this->context->get( 'A', 'testOne' );
             $this->fail( 'Nenhuma exceção foi lançada.' );
         } catch ( Exception $e ) {
             $expected = 'hasSingleReturnType';
@@ -49,7 +49,7 @@ final class CallbackValidatorTest extends TestCase {
             function testTwo(): string {
                 return '';
             };
-            $this->context->get( 'A', 'test_two' );
+            $this->context->get( 'A', 'testTwo' );
             $this->fail( 'Nenhuma exceção foi lançada.' );
         } catch ( Exception $e ) {
             $expected = 'returnMixed';

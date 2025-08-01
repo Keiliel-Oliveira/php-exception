@@ -14,12 +14,19 @@ class Context {
     /** @var mixed[] Armazena o contexto das exceções */
     private array $context = [];
 
+    private bool $auth = true;
+
     /**
      * Defini a chave com o valor dentro do contexto atual.
      *
      * Uma mesma chave não pode ser usada para dois valores, fazer isso lançaria uma exceção.
      */
     public function set( string $key, mixed $value ): void {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return;
+        }
         new ContextValidator( $this, $key )->validateIfNotHasContext();
         $this->context[$key] = $value;
     }
@@ -31,6 +38,11 @@ class Context {
      * são atualizados constantemente como valores de um array sendo percorrido.
      */
     public function forceSet( string $key, mixed $value ): void {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return;
+        }
         $this->context[$key] = $value;
     }
 
@@ -40,6 +52,11 @@ class Context {
      * Caso a chave não tenha sido definida anteriormente irá lançar uma exceção.
      */
     public function update( string $key, mixed $value ): void {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return;
+        }
         new ContextValidator( $this, $key )->validateIfHasContext();
         $this->forceSet( $key, $value );
     }
@@ -50,6 +67,11 @@ class Context {
      * Caso uma das chaves não exista, uma exceção será lançada.
      */
     public function delete( string ...$keys ): void {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return;
+        }
         foreach ( $keys as $i => $key ) {
             new ContextValidator( $this, $key )->validateIfHasContext();
             unset( $this->context[$key] );
@@ -67,6 +89,11 @@ class Context {
      * uma exceção será
      */
     public function clear( ?callable $callback = null ): void {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return;
+        }
         new CallbackValidator( $callback );
 
         if ( null !== $callback ) {
@@ -97,6 +124,11 @@ class Context {
      * uma exceção será
      */
     public function get( string $key, ?callable $callback = null ): mixed {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return null;
+        }
         new ContextValidator( $this, $key )->validateIfHasContext();
         new CallbackValidator( $callback );
 
@@ -118,6 +150,11 @@ class Context {
      * uma exceção será
      */
     public function getAll( ?callable $callback = null ): mixed {
+        if ( !$this->auth ) {
+            $this->auth = true;
+
+            return null;
+        }
         new CallbackValidator( $callback );
 
         if ( null !== $callback ) {
@@ -125,5 +162,39 @@ class Context {
         }
 
         return $this->context;
+    }
+
+    /**
+     * Faz com que o próximo método só seja executado caso a chave recebida exista.
+     */
+    public function ifHas( string $key ): self {
+        $this->auth = $this->has( $key );
+
+        return $this;
+    }
+
+    /**
+     * Faz com que o próximo método só seja executado caso a chave recebida não exista.
+     */
+    public function ifNotHas( string $key ): self {
+        $this->auth = !$this->has( $key );
+
+        return $this;
+    }
+
+    /**
+     * Faz com que o próximo método só seja executado quando a função de callback retorne TRUE.
+     *
+     * A função de callback deve retornar bool e receber um parâmetro do tipo
+     * KeilielOliveira\PhpException\Context, caso contrario uma exceção será lançada.
+     *
+     * O parâmetro da função de callback irá receber a instancia atual do contexto.
+     */
+    public function when( callable $callback ): self {
+        new CallbackValidator( $callback, 'bool', self::class );
+        $response = $callback( $this );
+        $this->auth = is_bool( $response ) ? $response : false;
+
+        return $this;
     }
 }
