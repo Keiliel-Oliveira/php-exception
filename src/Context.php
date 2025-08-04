@@ -16,6 +16,8 @@ class Context {
 
     private bool $auth = true;
 
+    private \Closure $format;
+
     /**
      * Defini a chave com o valor dentro do contexto atual.
      *
@@ -194,6 +196,42 @@ class Context {
         new CallbackValidator( $callback, 'bool', self::class );
         $response = $callback( $this );
         $this->auth = is_bool( $response ) ? $response : false;
+
+        return $this;
+    }
+
+    /**
+     * Separa as chaves recebidas do contexto e retorna em um array.
+     *
+     * Este método utiliza o método get() para recuperar cada chave, portanto, se uma chave não existir
+     * a exceção do método get() será lançada.
+     *
+     * @return mixed[]
+     */
+    public function separate( string ...$keys ): array {
+        $preparedContext = [];
+
+        foreach ( $keys as $i => $key ) {
+            $value = $this->get( $key );
+            $callback = $this->format ?? false;
+            $preparedContext[] = false === $callback ? $value : $callback( $value );
+        }
+
+        return $preparedContext;
+    }
+
+    /**
+     * Salva uma função de callback que será usada para todos os valores do método separate().
+     *
+     * Este método visa facilitar a formatação dos valores do separate(), a função será mantida e só será
+     * substituída quando uma nova função de callback for passada.
+     *
+     * A função de callback espera receber um parâmetro do tipo "mixed" e deve retornar "mixed", caso esses
+     * critérios não sejam atendidos, uma exceção será lançada.
+     */
+    public function format( callable $callback ): self {
+        new CallbackValidator( $callback );
+        $this->format = \Closure::fromCallable( $callback );
 
         return $this;
     }
