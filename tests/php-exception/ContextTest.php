@@ -132,14 +132,14 @@ final class ContextTest extends TestCase {
             $this->context->set( 'A', 'string' );
             $this->context->set( 'B', 10 );
             $this->context->set( 'C', true );
-            
-            $this->context->format(function(mixed $v): mixed {
-                if(is_bool($v)) {
+
+            $this->context->format( function ( mixed $v ): mixed {
+                if ( is_bool( $v ) ) {
                     return true === $v ? 'True' : 'False';
                 }
 
-                return is_string($v) ? $v : var_export($v, true);
-            });
+                return is_string( $v ) ? $v : var_export( $v, true );
+            } );
 
             $expected = ['True', 'string', '10'];
             $returned = $this->context->separate( 'C', 'A', 'B' );
