@@ -93,7 +93,7 @@ Esse método é acessível tanto pela interface estática como pela classe princ
 
 ### parâmetros:
 
-- ***string $key***: Chave única onde a instancia será salva.
+- ***string $key***: Chave única onde o valor será salvo.
 - ***mixed $value***: Valor a ser salvo.
 
 ### retorno:
@@ -137,7 +137,7 @@ Esse método é acessível tanto pela interface estática como pela classe princ
 
 ### parâmetros:
 
-- ***string $key***: Chave única onde a instancia será salva.
+- ***string $key***: Chave única onde o valor será salvo.
 - ***mixed $value***: Valor a ser salvo.
 
 ### retorno:
