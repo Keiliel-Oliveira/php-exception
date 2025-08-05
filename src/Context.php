@@ -96,7 +96,7 @@ class Context {
 
             return;
         }
-        new CallbackValidator( $callback );
+        new CallbackValidator( $callback, 'array', 'array' );
 
         if ( null !== $callback ) {
             $context = $callback( $this->context );
@@ -150,17 +150,21 @@ class Context {
      *
      * Se a função de callback não for uma função ou não receber um único parâmetro do tipo mixed
      * uma exceção será
+     *
+     * @return ?mixed[]
      */
-    public function getAll( ?callable $callback = null ): mixed {
+    public function getAll( ?callable $callback = null ): ?array {
         if ( !$this->auth ) {
             $this->auth = true;
 
             return null;
         }
-        new CallbackValidator( $callback );
+        new CallbackValidator( $callback, 'array', 'array' );
 
         if ( null !== $callback ) {
-            return $callback( $this->context );
+            $response = $callback( $this->context );
+
+            return is_array( $response ) ? $response : [$response];
         }
 
         return $this->context;

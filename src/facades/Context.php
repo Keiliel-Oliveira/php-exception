@@ -116,19 +116,19 @@ class Context {
     /**
      * Faz com que o próximo método só seja executado caso a chave recebida exista.
      */
-    public function ifHas( string $key ): self {
+    public static function ifHas( string $key ): self {
         self::getContextInstance()->ifHas( $key );
 
-        return $this;
+        return new self();
     }
 
     /**
      * Faz com que o próximo método só seja executado caso a chave recebida não exista.
      */
-    public function ifNotHas( string $key ): self {
+    public static function ifNotHas( string $key ): self {
         self::getContextInstance()->ifNotHas( $key );
 
-        return $this;
+        return new self();
     }
 
     /**
@@ -139,10 +139,10 @@ class Context {
      *
      * O parâmetro da função de callback irá receber a instancia atual do contexto.
      */
-    public function when( callable $callback ): self {
+    public static function when( callable $callback ): self {
         self::getContextInstance()->when( $callback );
 
-        return $this;
+        return new self();
     }
 
     /**
@@ -153,7 +153,7 @@ class Context {
      *
      * @return mixed[]
      */
-    public function separate( string ...$keys ): array {
+    public static function separate( string ...$keys ): array {
         return self::getContextInstance()->separate( ...$keys );
     }
 
@@ -166,10 +166,10 @@ class Context {
      * A função de callback espera receber um parâmetro do tipo "mixed" e deve retornar "mixed", caso esses
      * critérios não sejam atendidos, uma exceção será lançada.
      */
-    public function format( callable $callback ): self {
+    public static function format( callable $callback ): self {
         self::getContextInstance()->format( $callback );
 
-        return $this;
+        return new self();
     }
 
     private static function getContextInstance(): MainContext {

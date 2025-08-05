@@ -81,7 +81,7 @@ final class ContextTest extends TestCase {
         $this->context->set( 'B', 10 );
         $this->context->set( 'C', true );
 
-        $this->context->clear( function ( mixed $context ): mixed {
+        $this->context->clear( function ( array $context ): array {
             return array_filter( $context, function ( mixed $v ) {
                 return is_bool( $v );
             } );

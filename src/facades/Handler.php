@@ -17,7 +17,7 @@ class Handler {
      *
      * @throws \Exception
      */
-    public function save( string $name, Context $context ): void {
+    public static function save( string $name, Context $context ): void {
         self::getHandlerInstance()->save( $name, $context );
     }
 

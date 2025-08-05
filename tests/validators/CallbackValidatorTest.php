@@ -52,7 +52,7 @@ final class CallbackValidatorTest extends TestCase {
             $this->context->get( 'A', 'testTwo' );
             $this->fail( 'Nenhuma exceção foi lançada.' );
         } catch ( Exception $e ) {
-            $expected = 'returnMixed';
+            $expected = 'returnExpectedType';
             $returned = $e->getTrace()[0]['function'];
 
             $this->assertEquals( $expected, $returned );
@@ -100,7 +100,7 @@ final class CallbackValidatorTest extends TestCase {
             $this->context->get( 'A', function ( string $a ): mixed {return ''; } );
             $this->fail( 'Nenhuma exceção foi lançada.' );
         } catch ( Exception $e ) {
-            $expected = 'hasMixedType';
+            $expected = 'hasExpectedType';
             $returned = $e->getTrace()[0]['function'];
 
             $this->assertEquals( $expected, $returned );
