@@ -28,5 +28,8 @@ Neste exemplo, o contexto *'error_type'* é salvo para recuperação posterior, 
 
 A biblioteca embora simples, possui diversos métodos para auxiliar na geração de exceções mais descritivas, abaixo segue-se uma lista das documentações.
 
+Mas antes, um adendo relevante, a biblioteca possui dois tipos de identificadores únicos, cada qual com sua finalidade, mas algo que se aplica a ambos é a sintaxe, ela possui somente duas regras simples, não pode conter *{}* (chaves) nem *[]* (colchetes).
+
 - [Manipulação de contexto](./docs/contexto.md)
 - [Manipulação de instancias de contexto](./docs/instancia_de_contextos.md)
+- [Classe de exceções](./docs/classe_de_exceções.md)
