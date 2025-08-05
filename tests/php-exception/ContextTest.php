@@ -39,8 +39,8 @@ final class ContextTest extends TestCase {
         $this->context->set( 'C', true );
 
         $expected = ['B' => 10];
-        $returned = $this->context->getAll( function ( mixed $context ): mixed {
-            return array_filter( $context, function ( mixed $v ) {
+        $returned = $this->context->getAll( function ( array $context ): array {
+            return array_filter( $context, function ( mixed $v ): bool {
                 return is_int( $v );
             } );
         } );
