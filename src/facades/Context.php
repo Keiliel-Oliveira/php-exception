@@ -10,13 +10,13 @@ use KeilielOliveira\PhpException\Context as MainContext;
  * Simplificação estática da classe principal KeilielOliveira\PhpException\Context.
  */
 class Context {
-    private static MainContext $context;
+    private static ?MainContext $context = null;
 
     /**
      * Inicia uma nova instancia de contexto.
      */
     public static function newContext(): void {
-        unset( self::$context );
+        self::$context = null;
     }
 
     /**
