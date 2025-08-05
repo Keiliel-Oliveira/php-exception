@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace KeilielOliveira\PhpException;
 
 use KeilielOliveira\PhpException\Validators\CallbackValidator;
-use KeilielOliveira\PhpException\Validators\ContextValidator;
+use KeilielOliveira\PhpException\Validators\KeyValidator;
 
 /**
  * Controla o fluxo de dados de contexto de exceções.
@@ -29,7 +29,7 @@ class Context {
 
             return;
         }
-        new ContextValidator( $this, $key )->validateIfNotHasContext();
+        new KeyValidator( $this, $key )->validateIfNotHasContext();
         $this->context[$key] = $value;
     }
 
@@ -59,7 +59,7 @@ class Context {
 
             return;
         }
-        new ContextValidator( $this, $key )->validateIfHasContext();
+        new KeyValidator( $this, $key )->validateIfHasContext();
         $this->forceSet( $key, $value );
     }
 
@@ -75,7 +75,7 @@ class Context {
             return;
         }
         foreach ( $keys as $i => $key ) {
-            new ContextValidator( $this, $key )->validateIfHasContext();
+            new KeyValidator( $this, $key )->validateIfHasContext();
             unset( $this->context[$key] );
         }
     }
@@ -131,7 +131,7 @@ class Context {
 
             return null;
         }
-        new ContextValidator( $this, $key )->validateIfHasContext();
+        new KeyValidator( $this, $key )->validateIfHasContext();
         new CallbackValidator( $callback );
 
         $context = $this->context[$key];

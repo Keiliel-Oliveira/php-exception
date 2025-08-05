@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace KeilielOliveira\PhpException;
 
+use KeilielOliveira\PhpException\Validators\KeyValidator;
+
 /**
  * Controla o ciclo de vidas das instancias dos contextos.
  */
@@ -19,6 +21,7 @@ class Handler {
      * @throws \Exception
      */
     public function save( string $name, Context $context ): void {
+        new KeyValidator( $this, $name );
         if ( $this->has( $name ) ) {
             throw new \Exception( sprintf( 'O contexto "%s" já foi salvo.', $name ) );
         }
